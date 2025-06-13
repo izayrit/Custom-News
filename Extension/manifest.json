@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Browsing Tracker",
+  "version": "1.0",
+  "permissions": ["tabs", "storage"],
+  "host_permissions": ["http://localhost:3000/*"],
+  "background": {
+    "service_worker": "background.js"
+  }
+}

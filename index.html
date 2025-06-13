@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>News Recommendations</title>
+  <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+  <button id="getNewsBtn">Get My News</button>
+  <ul id="newsList"></ul>
+
+  <script>
+    async function getMyIp() {
+      const res = await fetch('http://localhost:3000/my-ip');
+      if (!res.ok) throw new Error('Cannot get IP');
+      const data = await res.json();
+      return data.ip;
+    }
+
+    async function getRecommendations(ip) {
+      const res = await fetch(`http://localhost:3000/recommend/${encodeURIComponent(ip)}`);
+      if (!res.ok) throw new Error('Failed to fetch recommendations');
+      return res.json();
+    }
+
+    document.getElementById('getNewsBtn').addEventListener('click', async () => {
+      try {
+        const ip = await getMyIp();
+        const news = await getRecommendations(ip);
+
+        const list = document.getElementById('newsList');
+        list.innerHTML = '';
+
+        news.forEach(item => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = item.url;
+          a.textContent = item.title;
+          a.target = '_blank';
+          li.appendChild(a);
+          list.appendChild(li);
+        });
+      } catch (e) {
+        alert(e.message);
+      }
+    });
+  </script>
+</body>
+</html>
